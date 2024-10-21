@@ -6,19 +6,21 @@ The **Login Page** is the landing page when initially loaded. Here, the users mu
 
 ![Login Page Placeholder](...)
 
-**Use Case**
+**Use Case**:
 
+The user wants to track their job application process by using our service. In order to use our service, they must log in. The user sets a username and password the first time that they log in. After logging in, the user will land on the **User Applications Screen** where they can interact with our service. All of the user's interactions are saved under the user's profile, so that every time they log in their information is there.
 
 ## Profile Page Screen
 
-The **Profile Page** is where users can enter their information. This information will be important in other features.
+The **Profile Page** is where users can enter their information. This information will be important in other features
 
 ![Profile Page Placeholder](...)
 
-**Use Case**
+The profile page will include a picture of the user, a description/bio, their resume, contact information, and user settings. The user has the opportunity to edit any of this information after it is saved.
 
+**Use Case**:
 
-The profile page will include a picture of the user, a description/bio, their resume, contact information, and user settings.
+A user who just logged in wants to personalize their account. When they go to the profile page, they can edit their name, biography, contact information, user settings, and upload a resume. Say the user just got married and wants to change their name. The user can edit their profile, input a new name, and save their changes. The user's new name will show on their profile.
 
 ## User Applications Screen
 
@@ -47,11 +49,3 @@ The **Application Information** is for users to view more information about a jo
 ![Application Information Placeholder](...)
 
 description of layout ...
-
-The form also includes input validation to ensure that all required fields are completed before submission. If any required fields are missing, the user will receive an error message prompting them to correct the issue.
-
-**Use Case**: 
-
-A user who just paid for groceries would navigate to this screen, select “Groceries” from the category dropdown, enter the amount spent, and optionally add a note such as “Weekly shopping.” After saving the expense, the user is taken back to the **Main Dashboard** where the total for the month is updated to reflect the newly logged transaction.
-
-add two more...
