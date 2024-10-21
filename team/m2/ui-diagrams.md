@@ -1,19 +1,33 @@
 # UI Diagrams
 
-## User Dashboard Screen
+## Login Page Screen
 
-The **User Dashboard** is the homepage that users will be directed to after logging in. 
+The **Login Page** is the landing page when initially loaded. Here, the users must log in or create an account in order to access the homepage and interact with our system. This page is simple with two inputs for username and password and our logo.
+
+![Login Page Placeholder](...)
+
+## Profile Page Screen
+
+The **Profile Page** is where users can enter their information. This information will be important in other features.
+
+![Profile Page Placeholder](...)
+
+The profile page will include a picture of the user, a description/bio, their resume, contact information, and user settings.
+
+## User Applications Screen
+
+The **User Application Screen** is the homepage that users will be directed to after logging in. It includes all of the users current applications, interviews, offers, . There are buttons for adding new applications which will be filled out in a pop-up. 
 Describe the layout/design: ...
 What will it display: ...
 Give a solid description of what the page will look like...
 
-![User Dashboard Placeholder](...)
+![User Applications Placeholder](...)
 
-On this screen, users can interact with important elements:
+On this screen, users can interact with their applications:
 
-1. **Job Application Tracker**: description...
-2. **Deadline Reminders and Notifications**: description...
-3. **Priority Applications**: description. Add any links to other pages...
+1. **Prioritize Applications**: Order the applications so that the user can put the most important ones first. description...
+2. **More Info**: description...
+3. **Track New Applications**: description. Add any links to other pages...
 
 This screen is the primary location for the user’s experience. It includes links to all other important pages. It acts as the main display for the Job Application Tracker as well as a directory for other useful features.
 
