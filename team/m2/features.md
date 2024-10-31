@@ -48,3 +48,15 @@ Users can view alumni, with public profiles, from their university who have prev
 Users can login or create account. Login allows users to enter a email and password and if it is correct they get sent to the homepage, else it prompts an error message. On the create account page, users can enter an email and a password twice to make an account on the web page.
 
 **Assigned to**: Krish Sharma
+
+## 'Add Job' Button
+
+There will be an ‘Add’ button displayed on the home page where users can click the button and add in a new job they are applying for. Clicking the button will prompt users to input information for a new job that will be accessible in the ‘Application Information’ page.
+
+**Assigned to**: Lauren Shea
+
+## Deadline Reminders and Notifications
+
+Users can select reminders for important deadlines and due dates coming up. Users will have to input what they want as a reminder and when they want to be reminded of it. The reminders will be displayed on the home page.
+
+**Assigned to**: Lauren Shea
