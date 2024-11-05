@@ -21,7 +21,7 @@
 ### November 4, 2024
 - **Task 1**: added code to make popup modal
 - **Details**: I added code to make a modal in the HTML file for the homepage so the user can input new information for a job
-- **Link to Commit**: 
+- **Link to Commit**: https://github.com/edwintran235/326-team9/commit/501502731fc99a760ed6ed3ffc78d97abdf9d3bd
 - **Task 2**: added CSS for the add button modal
 - **Details**: added the CSS styling for the modal to popup
-- **Link to Commit**:
+- **Link to Commit**: https://github.com/edwintran235/326-team9/commit/a9f42465a538d56cac2a1e0452637b369188f01c
