@@ -209,13 +209,20 @@ remindSubmit.addEventListener("click", () => {
   const reminderText = document.getElementById("reminder-des").value;
   const reminderDate = document.getElementById("remind-date").value;
 
-  const reminderData = {
+  if (!reminderText || !reminderDate) {
+    alert("Please fill out both fields.");
+    return;
+  }
+
+  /* const reminderData = {
     id: new Date().getTime(),
     description: reminderText,
     date: reminderDate
   }
+    
+    save data
 
-  // save data
+  */
 
   try {
 
