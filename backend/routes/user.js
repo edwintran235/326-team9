@@ -42,11 +42,34 @@ router.post('/application', (req, res) => {
     });
 });
 
+// Create Reminder
+router.post('/reminder', (req, res) => {
+    Reminder.create({
+        date: req.body.date,
+        description: req.body.description
+    }).then(reminder => {
+        res.status(200).json(reminder);
+    }).catch(err => {
+        res.status(400).json('Error has occured: ' + `${err.message}`);
+    });
+});
+
+
 // Example route: Get All Applications
 router.get('/application', (req, res) => {
     //console.log('Getting all apps');
     Application.findAll().then(application => {
         res.status(200).json(application);
+    });
+});
+
+// Get All Reminders
+router.get('/reminder', (req, res) => {
+    Reminder.findAll().then(reminders => {
+        res.status(200).json(reminders);
+    })
+    .catch(err => {
+        res.status(500).json({ error: `Error retrieving reminders: ${err.message}` });
     });
 });
 
@@ -83,6 +106,15 @@ router.put('/application/:id', [checkIDExist], (req, res) => {
 router.delete('/user/:id', [checkIDExist], (req, res) => {
     //console.log('Delete book by id');
     User.destroy({
+        where: { id: req.params.id }
+    }).then(result => {
+        res.status(200).json(result);
+    });
+});
+
+// Delete Reminder by id
+router.delete('/reminder/:id', [checkIDExist], (req, res) => {
+    Reminder.destroy({
         where: { id: req.params.id }
     }).then(result => {
         res.status(200).json(result);

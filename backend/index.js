@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 // Import Schemas
-const { User, Application, Tip, Interview } = require('./models/user');
+const { User, Application, Tip, Interview, Reminder } = require('./models/user');
 
 // Post to the users table
 app.post("users", (res) => {

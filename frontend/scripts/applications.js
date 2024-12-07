@@ -94,6 +94,12 @@ appCoverLetter.addEventListener("change", async (event) => {
   }
 });
 
+
+
+
+
+
+
 // Search bar functionality (if needed)
 const searchBarElement = document.getElementById("search-bar");
 if (searchBarElement) {

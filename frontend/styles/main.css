@@ -108,6 +108,7 @@ header .logo {
   background-color: #d2e5ff;
   border-radius: 4px;
   padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
 .reminder-row {
@@ -145,6 +146,25 @@ input[type="checkbox"] {
   height: 30px;
   margin: 0;
 }
+
+.delete-reminder {
+  background: #d9e9ff;
+  border: 1px solid #bbb; 
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 14px; 
+  font-weight: bold;
+  cursor: pointer;  
+  margin-right: auto;
+  flex-direction: column;
+}
+
+.delete-reminder:hover {
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2); 
+  background-color: #e4efff;
+}
+
 
 .reminder-button {
   background-color: #a9afba;

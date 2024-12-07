@@ -178,12 +178,15 @@ submitBtn.addEventListener("click", async () => {
     // Clear form fields and close the modal
     document.getElementById("companyName").value = "";
     document.getElementById("position").value = "";
+    document.getElementById("jobLocation").value = "";
+    document.getElementById("jobContacts").value = "";
+    document.getElementById("jobDescription").value = "";
     document.getElementById("dateApplied").value = "";
     document.getElementById("deadline").value = "";
     document.getElementById("status").value = "interested";
     modal.style.display = "none";
   } catch (error) {
-    console.log("Error adding new application.", error);
+    console.log("Error adding new application!", error);
   }
 });
 
@@ -192,6 +195,7 @@ const reminder = document.getElementById("reminder-popup");
 const remindButton = document.getElementById("new-reminder-button");
 const remindSpan = document.getElementsByClassName("close-reminder")[0];
 const remindSubmit = document.getElementById("reminder-submit");
+
 
 remindButton.addEventListener("click", () => {
   reminder.style.display = "flex";
@@ -207,63 +211,146 @@ window.addEventListener("click", function (event) {
   }
 });
 
-remindSubmit.addEventListener("click", () => {
+// add reminder delete button functionality
+
+function reminderDeleteListeners() {
+
+  const deleteButtons = document.querySelectorAll('.delete-reminder');
+  
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+
+      const reminderToDelete = e.target.closest('.reminder-container');
+      const reminderId = reminderToDelete.dataset.id;
+
+      if (reminderToDelete) {
+        try {
+
+          const response = await fetch(`http://localhost:3021/reminder/${reminderId}`, {
+            method: 'DELETE'
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to delete reminder");
+          }
+
+          reminderToDelete.remove();
+
+        } catch (error) {
+          console.log("Error deleting reminder!", error);
+        }
+      }
+    });
+  });
+}
+
+reminderDeleteListeners(); 
+
+// create and render new reminder 
+
+remindSubmit.addEventListener("click", async () => {
   const reminderText = document.getElementById("reminder-des").value;
   const reminderDate = document.getElementById("remind-date").value;
 
+  // get data
   const reminderData = {
-    id: new Date().getTime(),
     description: reminderText,
     date: reminderDate
   }
 
   // save data
-
   try {
+  
+    const response = await fetch('http://localhost:3021/reminder', {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(reminderData)
+    });
 
-    // add new reminder box
-    const reminderContainer = document.createElement("div");
-    reminderContainer.className = "reminder-container";
+    if (!response.ok) {
+      throw new Error("Failed to create reminder");
+    }
 
-    const reminderRow = document.createElement("div");
-    reminderRow.className = "reminder-row";
+    const newReminder = await response.json();
 
-    const reminderTextDiv = document.createElement("div");
-    reminderTextDiv.className = "reminder-text";
-
-    const reminderName = document.createElement("p");
-    reminderName.className = "reminder-name";
-    reminderName.textContent = reminderText;
-    const reminderDateP = document.createElement("p");
-    reminderDateP.className = "reminder-date";
-    reminderDateP.textContent = `Deadline: ${reminderDate}`;
-
-    reminderTextDiv.appendChild(reminderName);
-    reminderTextDiv.appendChild(reminderDateP);
-
-    const checkboxLabel = document.createElement("label");
-    const checkboxInput = document.createElement("input");
-    checkboxInput.type = "checkbox";
-    checkboxLabel.appendChild(checkboxInput);
-
-    reminderRow.appendChild(reminderTextDiv);
-    reminderRow.appendChild(checkboxLabel);
-
-    reminderContainer.appendChild(reminderRow);
-
-    const newReminder = document.getElementById("add-reminder");
-    newReminder.appendChild(reminderContainer);
+    renderReminder(newReminder);
 
     document.getElementById("reminder-des").value = "";
     document.getElementById("remind-date").value = "";
     
     reminder.style.display = "none";
 
+  } catch (error) {
+    console.log("Error adding new reminder!", error);
+  }
+});
+
+// render reminders after reload
+document.addEventListener("DOMContentLoaded", async () => {
+
+  try {
+    
+    const response = await fetch('http://localhost:3021/reminder');
+    if (!response.ok) {
+      throw new Error("Failed to load reminders");
+    }
+
+    const reminders = await response.json();
+    reminders.forEach(renderReminder);
 
   } catch (error) {
-      console.log("Error adding new reminder!", error);
+    console.log("Error fetching reminders!", error);
   }
 
 });
+
+// add reminders to UI
+function renderReminder(reminder) {
+
+  const reminderContainer = document.createElement("div");
+  reminderContainer.className = "reminder-container";
+  reminderContainer.dataset.id = reminder.id;
+
+  const reminderRow = document.createElement("div");
+  reminderRow.className = "reminder-row";
+
+  const reminderTextDiv = document.createElement("div");
+  reminderTextDiv.className = "reminder-text";
+
+  const reminderName = document.createElement("p");
+  reminderName.className = "reminder-name";
+  reminderName.textContent = reminder.description;
+  const reminderDateP = document.createElement("p");
+  reminderDateP.className = "reminder-date";
+  reminderDateP.textContent = `Deadline: ${new Date(reminder.date).toLocaleDateString()}`;
+
+  const deleteButton = document.createElement("button");
+  deleteButton.className = "delete-reminder";
+  deleteButton.textContent = "🗑 Delete";
+
+  reminderTextDiv.appendChild(reminderName);
+  reminderTextDiv.appendChild(reminderDateP);
+  reminderTextDiv.appendChild(deleteButton);
+
+  const checkboxLabel = document.createElement("label");
+  const checkboxInput = document.createElement("input");
+  checkboxInput.type = "checkbox";
+  checkboxLabel.appendChild(checkboxInput);
+
+
+  reminderRow.appendChild(reminderTextDiv);
+  reminderRow.appendChild(checkboxLabel);
+
+  reminderContainer.appendChild(reminderRow);
+
+  const currReminders = document.getElementById("add-reminder");
+  currReminders.appendChild(reminderContainer);
+
+  reminderDeleteListeners();
+
+}
+
 
 export { appQuery };
