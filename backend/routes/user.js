@@ -112,6 +112,47 @@ router.put('/application/:id', [checkIDExist], (req, res) => {
     });
 });
 
+// Example route: Deleting an application by id
+router.put('/application/:id/delete', [checkIDExist], (req, res) => {
+    Application.update({
+        is_deleted: true,
+        dateDeleted: new Date(),
+    }, {
+        where: { id: req.params.id },
+    }).then(result => {
+        res.status(200).json({ message: 'Application moved to trash.', result });
+    }).catch(err => {
+        res.status(500).json({ error: `Error deleting application: ${err.message}` });
+    });
+});
+
+// Example route: Create a route to retrieve applications where is_deleted is true
+router.get('/applications/deleted', (req, res) => {
+    Application.findAll({
+        where: { is_deleted: true },
+    }).then(applications => {
+        res.status(200).json(applications);
+    }).catch(err => {
+        res.status(500).json({ error: `Error fetching deleted applications: ${err.message}` });
+    });
+});
+
+// Example route: Restore from trash
+router.put('/application/:id/restore', [checkIDExist], (req, res) => {
+    Application.update({
+        is_deleted: false,
+        dateDeleted: null, 
+    }, {
+        where: { id: req.params.id },
+    }).then(result => {
+        res.status(200).json({ message: 'Application restored.', result });
+    }).catch(err => {
+        res.status(500).json({ error: `Error restoring application: ${err.message}` });
+    });
+});
+
+
+
 // Example route: Delete user by id
 router.delete('/user/:id', [checkIDExist], (req, res) => {
     //console.log('Delete book by id');
@@ -136,5 +177,64 @@ router.delete('/reminder/:id', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+
+// Example route: Create an Interview Note
+router.post('/interview-notes', async (req, res) => {
+    try {
+        const appExists = await Application.findByPk(req.body.applicationId);
+        if (!appExists) return res.status(404).json({ error: 'Application not found.' });
+
+        const note = await Interview.create({
+            applicationId: req.body.applicationId,
+            interview_date: req.body.interview_date,
+            interview_format: req.body.interview_format,
+            notes: req.body.notes,
+        });
+        res.status(201).json(note);
+    } catch (err) {
+        res.status(500).json({ error: `Error adding note: ${err.message}` });
+    }
+});
+
+// Example route: Fetch notes for specific application
+router.get('/interview-notes/:applicationId', (req, res) => {
+    Interview.findAll({
+        where: { applicationId: req.params.applicationId },
+    }).then(notes => {
+        res.status(200).json(notes);
+    }).catch(err => {
+        res.status(500).json({ error: `Error retrieving notes: ${err.message}` });
+    });
+});
+
+// Example route: Update an existing interview note
+router.put('/interview-notes/:id', (req, res) => {
+    Interview.update({
+        interview_date: req.body.interview_date,
+        interview_format: req.body.interview_format,
+        notes: req.body.notes,
+    }, {
+        where: { id: req.params.id },
+    }).then(result => {
+        res.status(200).json({ message: 'Note updated.', result });
+    }).catch(err => {
+        res.status(500).json({ error: `Error updating note: ${err.message}` });
+    });
+});
+
+// Example route: Delete an existing Interview note
+router.delete('/interview-notes/:id', (req, res) => {
+    Interview.destroy({
+        where: { id: req.params.id },
+    }).then(result => {
+        if (result) {
+            res.status(200).json({ message: 'Note deleted.' });
+        } else {
+            res.status(404).json({ error: 'Note not found.' });
+        }
+    }).catch(err => {
+        res.status(500).json({ error: `Error deleting note: ${err.message}` });
+    });
+});
 
 module.exports = router;
