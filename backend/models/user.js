@@ -64,20 +64,25 @@ Application.init({
     },
     status: {
         type: DataTypes.ENUM,
-        values: ['interested', 'applied', 'interviewing'],
+        values: ['interested', 'applied', 'interviewing', 'offer'],
     },
     previousStatus: {
         type: DataTypes.ENUM,
-        values: ['interested', 'applied', 'interviewing'],
+        values: ['interested', 'applied', 'interviewing', 'offer'],
     },
     dateApplied: {
         type: DataTypes.DATE
     },
     dateDeleted: {
         type: DataTypes.DATE,
+        allowNull: true, 
     },
     hasStar: {
         type: DataTypes.BOOLEAN,
+    },
+    is_deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false, 
     },
     // TODO: Add resume, cover letter
 }, {
@@ -105,7 +110,7 @@ Tip.init({
     },
     interviewStage: {
         type: DataTypes.ENUM,
-        values: ['interested', 'applied', 'interviewing'],
+        values: ['interested', 'applied', 'interviewing', 'offer'],
     },
 }, {
     sequelize,
