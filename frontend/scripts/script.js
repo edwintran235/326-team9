@@ -368,15 +368,7 @@ function renderReminder(reminder) {
   reminderTextDiv.appendChild(reminderDateP);
   reminderTextDiv.appendChild(deleteButton);
 
-  const checkboxLabel = document.createElement("label");
-  const checkboxInput = document.createElement("input");
-  checkboxInput.type = "checkbox";
-  checkboxLabel.appendChild(checkboxInput);
-
-
   reminderRow.appendChild(reminderTextDiv);
-  reminderRow.appendChild(checkboxLabel);
-
   reminderContainer.appendChild(reminderRow);
 
   const currReminders = document.getElementById("add-reminder");
