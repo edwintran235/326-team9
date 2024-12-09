@@ -216,6 +216,10 @@ function renderApplication(application) {
   applicationBox.id = application.id; // Use application.id from the parameter
   applicationBox.draggable = true;
 
+  // Add data-* attributes for sorting
+  applicationBox.dataset.dateApplied = application.dateApplied || '';
+  applicationBox.dataset.companyName = application.companyName.toLowerCase() || '';
+
   // Set inner HTML using application data
   applicationBox.innerHTML = `
     <span class="star-icon" title="Mark as priority">☆</span>
@@ -263,6 +267,7 @@ function renderApplication(application) {
     window.location.href = `applicationInfo.html?id=${application.id}`; // Use application.id
   });
 }
+
 
 
 // Reminder Modal
@@ -430,3 +435,36 @@ function renderReminder(reminder) {
   reminderDeleteListeners();
 
 }
+
+// Dropdown event listener for sorting
+const sortDropdown = document.getElementById("sort-options");
+
+sortDropdown.addEventListener("change", () => {
+  const sortOption = sortDropdown.value; // Get selected sort option
+
+  // Get all status columns
+  const statusColumns = document.querySelectorAll(".status-column");
+
+  statusColumns.forEach((column) => {
+    // Get all application boxes within the column
+    const applications = Array.from(column.querySelectorAll(".application-box"));
+
+    // Sort applications based on the selected option
+    applications.sort((a, b) => {
+      if (sortOption === "company") {
+        // Alphabetical sort
+        return a.dataset.companyName.localeCompare(b.dataset.companyName);
+      } else if (sortOption === "date") {
+        // Sort by date applied
+        return new Date(a.dataset.dateApplied) - new Date(b.dataset.dateApplied);
+      }
+      return 0; // Default order (no change)
+    });
+
+    // Remove all applications from the column
+    applications.forEach((app) => column.removeChild(app));
+
+    // Re-add the applications in the sorted order
+    applications.forEach((app) => column.appendChild(app));
+  });
+});
