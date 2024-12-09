@@ -1,24 +1,17 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-// Tables to create
-// const tableName1 = 'users';
-// const tableName2 = 'applications';
-// const tableName3 = 'application information';
-// const tableName4 = 'tips';
-// const tableName5 = 'reminders';
-// const tableName6 = 'interviews';
-// TODO: create the rest of the tables
-
 // User Schema
 class User extends Model {}
 User.init({
     email: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: false,
     },
     password: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
     firstName: {
         type: DataTypes.STRING,
@@ -27,7 +20,13 @@ User.init({
         type: DataTypes.STRING,
     },
     bio: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+    },
+    resumePath: {
+        type: DataTypes.STRING,
+    },
+    coverLetterPath: {
+        type: DataTypes.STRING,
     },
     resumePath: {
         type: DataTypes.STRING,
@@ -40,27 +39,32 @@ User.init({
     sequelize,
     modelName: 'User',
     tableName: 'users',
+    timestamps: true, // Automatically adds createdAt and updatedAt timestamps
 });
 
-// Application Information Schema
+// Application Schema
 class Application extends Model {}
 Application.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        unique: true,
         autoIncrement: true,
-        allowNull: true
     },
-    // userId: {
-    //     type: DataTypes.INTEGER, // Foreign key for the User
-    //     allowNull: true
-    // },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id',
+        },
+    },
     companyName: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
     position: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
     location: {
         type: DataTypes.STRING,
@@ -72,33 +76,27 @@ Application.init({
         type: DataTypes.STRING,
     },
     status: {
-        type: DataTypes.ENUM,
-        values: ['interested', 'applied', 'interviewing', 'offer'],
+        type: DataTypes.ENUM('interested', 'applied', 'interviewing', 'offer'),
+        allowNull: false,
     },
-    isDeleted: {
-        type: DataTypes.ENUM,
+    previousStatus: {
+        type: DataTypes.ENUM('interested', 'applied', 'interviewing', 'offer'),
     },
-    // previousStatus: {
-    //     type: DataTypes.ENUM,
-    //     values: ['interested', 'applied', 'interviewing', 'offer'],
-    //     allowNull: true
-    // },
-    // dateApplied: {
-    //     type: DataTypes.DATE
-    // },
-    // dateDeleted: {
-    //     type: DataTypes.DATE,
-    //     allowNull: true
-    // },
-    // hasStar: {
-    //     type: DataTypes.BOOLEAN,
-    //     allowNull: true
-    // },
-    // TODO: Add resume, cover letter
+    dateApplied: {
+        type: DataTypes.DATE,
+    },
+    dateDeleted: {
+        type: DataTypes.DATE,
+    },
+    hasStar: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
 }, {
     sequelize,
     modelName: 'Application',
-    tableName: 'Applications',
+    tableName: 'applications',
+    timestamps: true, // Adds createdAt and updatedAt
 });
 
 // Tip Schema
@@ -107,10 +105,15 @@ Tip.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        unique: true,
+        autoIncrement: true,
     },
     userId: {
-        type: DataTypes.INTEGER, // Foreign key for the User
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id',
+        },
     },
     author: {
         type: DataTypes.STRING,
@@ -119,13 +122,13 @@ Tip.init({
         type: DataTypes.STRING,
     },
     interviewStage: {
-        type: DataTypes.ENUM,
-        values: ['interested', 'applied', 'interviewing', 'offer'],
+        type: DataTypes.ENUM('interested', 'applied', 'interviewing'),
     },
 }, {
     sequelize,
     modelName: 'Tip',
     tableName: 'tips',
+    timestamps: true,
 });
 
 // Reminder Schema
@@ -134,18 +137,28 @@ Reminder.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id',
+        },
     },
     date: {
         type: DataTypes.DATE,
+        allowNull: false,
     },
     description: {
         type: DataTypes.STRING,
     },
 }, {
-    sequelize, // Pass the sequelize instance
+    sequelize,
     modelName: 'Reminder',
-    tableName: 'Reminders',
+    tableName: 'reminders',
+    timestamps: true,
 });
 
 // Interview Schema
@@ -154,31 +167,50 @@ Interview.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
     },
     applicationId: {
-        type: DataTypes.INTEGER, // Foreign key for the Application
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Application,
+            key: 'id',
+        },
     },
     date: {
         type: DataTypes.DATE,
+        allowNull: false,
     },
     format: {
-        type: DataTypes.ENUM,
-        values: ['phone', 'onsite', 'technical exam'],
+        type: DataTypes.ENUM('phone', 'onsite', 'technical exam'),
     },
     questions: {
         type: DataTypes.STRING,
-    }
+    },
 }, {
     sequelize,
     modelName: 'Interview',
     tableName: 'interviews',
+    timestamps: true,
 });
 
-// Exporting models
+// Establish relationships between tables
+User.hasMany(Application, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Application.belongsTo(User, { foreignKey: 'userId' });
+
+User.hasMany(Tip, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Tip.belongsTo(User, { foreignKey: 'userId' });
+
+User.hasMany(Reminder, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Reminder.belongsTo(User, { foreignKey: 'userId' });
+
+Application.hasMany(Interview, { foreignKey: 'applicationId', onDelete: 'CASCADE' });
+Interview.belongsTo(Application, { foreignKey: 'applicationId' });
+
 module.exports = {
     User,
     Application,
     Tip,
     Reminder,
-    Interview
+    Interview,
 };

@@ -28,7 +28,7 @@ async function hashPassword(password) {
   const data = encoder.encode(password);
   const hash = await crypto.subtle.digest("SHA-256", data);
   return Array.from(new Uint8Array(hash))
-    .map(b => b.toString(16).padStart(2, "0"))
+    .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 }
 
@@ -36,9 +36,9 @@ async function hashPassword(password) {
 signupForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email = document.getElementById("signupEmail").value;
-  const password = document.getElementById("signupPassword").value;
-  const confirmPassword = document.getElementById("signupConfirmPassword").value;
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value.trim();
+  const confirmPassword = document.getElementById("signupConfirmPassword").value.trim();
 
   if (password !== confirmPassword) {
     alert("Passwords do not match!");
@@ -46,15 +46,18 @@ signupForm.addEventListener("submit", async (e) => {
   }
 
   try {
-    const existingUser = await db.getAppByID(email);
+    // Check if the user already exists
+    const existingUser = await db.getUserByEmail(email);
     if (existingUser) {
       alert("User already exists. Please sign in.");
       return;
     }
 
+    // Hash the password
     const hashedPassword = await hashPassword(password);
 
-    await db.addApp({ id: email, password: hashedPassword });
+    // Add the user to IndexedDB
+    await db.addUser({ email, password: hashedPassword });
     alert("Sign-up successful! Please sign in.");
     signupContainer.style.display = "none";
     signinForm.parentElement.style.display = "block";
@@ -67,14 +70,22 @@ signupForm.addEventListener("submit", async (e) => {
 signinForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email = document.getElementById("signinEmail").value;
-  const password = document.getElementById("signinPassword").value;
+  const email = document.getElementById("signinEmail").value.trim();
+  const password = document.getElementById("signinPassword").value.trim();
 
   try {
-    const user = await db.getAppByID(email);
+    // Get the user by email from IndexedDB
+    const user = await db.getUserByEmail(email);
+
+    if (!user) {
+      alert("User not found. Please sign up.");
+      return;
+    }
+
+    // Hash the input password and compare
     const hashedPassword = await hashPassword(password);
 
-    if (user && user.password === hashedPassword) {
+    if (user.password === hashedPassword) {
       alert("Login successful!");
       window.location.href = "./homepage.html"; // Redirect to homepage
     } else {

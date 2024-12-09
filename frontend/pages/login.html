@@ -4,40 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
-  <link rel="stylesheet" href="./styles/login.css">
+  <!-- Update the path if the CSS file is in a different folder -->
+  <link rel="stylesheet" href="../styles/login.css">
 </head>
 <body>
   <div class="container">
+    <!-- Logo Section -->
     <div class="logo">
       <h1>HireMap</h1>
     </div>
-    <div class="form-container">
+
+    <!-- Login Form Section -->
+    <div class="form-container" id="signinContainer">
       <h2>Login</h2>
       <form id="signinForm">
         <label for="signinEmail">Email:</label>
-        <input type="email" id="signinEmail" required>
+        <input type="email" id="signinEmail" placeholder="Enter your email" required>
         <label for="signinPassword">Password:</label>
-        <input type="password" id="signinPassword" required>
+        <input type="password" id="signinPassword" placeholder="Enter your password" required>
         <button type="submit">Sign In</button>
       </form>
       <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
     </div>
 
+    <!-- Signup Form Section -->
     <div class="form-container" id="signupContainer" style="display: none;">
       <h2>Sign Up</h2>
       <form id="signupForm">
         <label for="signupEmail">Email:</label>
-        <input type="email" id="signupEmail" required>
+        <input type="email" id="signupEmail" placeholder="Enter your email" required>
         <label for="signupPassword">Password:</label>
-        <input type="password" id="signupPassword" required>
+        <input type="password" id="signupPassword" placeholder="Enter your password" required>
         <label for="signupConfirmPassword">Confirm Password:</label>
-        <input type="password" id="signupConfirmPassword" required>
+        <input type="password" id="signupConfirmPassword" placeholder="Re-enter your password" required>
         <button type="submit">Sign Up</button>
       </form>
       <p>Already have an account? <a href="#" id="showSignin">Sign in</a></p>
     </div>
   </div>
 
-  <script type="module" src="./scripts/login.js"></script>
+  <!-- Link to the JavaScript file -->
+  <script type="module" src="../scripts/login.js"></script>
 </body>
 </html>
