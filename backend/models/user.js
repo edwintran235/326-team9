@@ -29,6 +29,12 @@ User.init({
     bio: {
         type: DataTypes.STRING
     },
+    resumePath: {
+        type: DataTypes.STRING,
+    },
+    coverLetterPath: {
+        type: DataTypes.STRING,
+    },
     // TODO: add resume, cover letter, and photo
 }, {
     sequelize,
