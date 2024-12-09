@@ -431,7 +431,17 @@ function renderReminder(reminder) {
   reminderName.textContent = reminder.description;
   const reminderDateP = document.createElement("p");
   reminderDateP.className = "reminder-date";
-  reminderDateP.textContent = `Deadline: ${new Date(reminder.date).toLocaleDateString()}`;
+
+  const reminderDate = new Date(reminder.date);
+  const reminderToDate = reminderDate.toLocaleDateString('en-US', { timeZone: 'UTC' });
+  reminderDateP.textContent = `Deadline: ${reminderToDate}`;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (reminderDate < today) {
+  reminderDateP.style.color = 'red';
+  }
 
   const deleteButton = document.createElement("button");
   deleteButton.className = "delete-reminder";
