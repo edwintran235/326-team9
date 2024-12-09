@@ -133,7 +133,6 @@ router.delete('/reminder/:id', async (req, res) => {
       }
     } catch (error) {
       console.error("Error deleting reminder:", error);
-      res.status(500).json({ error: 'Internal server error' });
     }
   });
 

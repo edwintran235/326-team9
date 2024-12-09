@@ -324,6 +324,7 @@ remindSubmit.addEventListener("click", async () => {
 
 // render reminders after reload
 document.addEventListener("DOMContentLoaded", async () => {
+  
   try {
     
     const response = await fetch('http://localhost:3021/reminder');
