@@ -227,53 +227,35 @@ router.delete('/applications/:id', async (req, res) => {
     }
 });
 
-// Fetch interview notes for a specific user's application
-router.get('/user/:userId/applications/:applicationId/notes', async (req, res) => {
+router.get('/interviews/:applicationId', async (req, res) => {
     try {
-        const { userId, applicationId } = req.params;
-
-        // Ensure Application model is imported correctly
-        const application = await Application.findOne({ where: { id: applicationId, userId: userId } });
-
-        if (!application) {
-            return res.status(404).json({ error: 'Application not found for this user' });
-        }
-
-        const interviewNotes = await InterviewNotes.findOne({
-            where: { application_id: application.id }
-        });
-
-        res.json({ notes: interviewNotes ? interviewNotes.notes : '' });
-    } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        const notes = await Interview.findAll({ where: { applicationId: req.params.applicationId } });
+        if (!notes) return res.status(404).json({ message: 'No interview notes found' });
+        res.status(200).json(notes);
+    } catch (error) {
+        console.error('Error fetching interview notes:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-
-// Update interview notes for a specific user's application
-router.put('/user/:userId/applications/:applicationId/notes', async (req, res) => {
+// Update interview notes
+router.put('/interviews/:applicationId', async (req, res) => {
     try {
-        const { userId, applicationId } = req.params;
-        const { notes } = req.body;
+        const { applicationId } = req.params;
+        const { questions } = req.body;
 
-        // Ensure Application model is imported correctly
-        const application = await Application.findOne({ where: { id: applicationId, userId: userId } });
+        const [updated] = await Interview.update(
+            { questions },
+            { where: { applicationId } }
+        );
 
-        if (!application) {
-            return res.status(404).json({ error: 'Application not found for this user' });
+        if (!updated) {
+            return res.status(404).json({ message: 'Interview notes not found!' });
         }
 
-        const interviewNotes = await InterviewNotes.findOrCreate({
-            where: { application_id: application.id },
-            defaults: { application_id: application.id, notes: '' },
-        });
-
-        interviewNotes[0].notes = notes;
-        await interviewNotes[0].save();
-
-        res.status(200).json({ message: 'Interview notes updated successfully' });
+        res.json({ message: 'Interview notes updated successfully.' });
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ message: 'Error updating interview notes.', error: err.message });
     }
 });
 
