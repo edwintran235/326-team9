@@ -1,5 +1,3 @@
-
-
 // Add event listeners to each application box
 const boxes = document.querySelectorAll(".application-box");
 const columns = document.querySelectorAll(".status-column");
@@ -88,8 +86,6 @@ async function dragDrop(e) {
   }
 }
 
-
-
 function dragOverTrash(e) {
   e.preventDefault(); // Allows the drop
 }
@@ -103,25 +99,37 @@ function dragLeaveTrash(e) {
 }
 
 async function dragDropTrash(e) {
-  e.preventDefault();
-  trashCan.classList.remove("drag-over-trash");
+  // e.preventDefault();
+  // trashCan.classList.remove("drag-over-trash");
 
-  const appID = e.dataTransfer.getData("text/plain");
-  const draggable = document.getElementById(appID);
+  const id = e.dataTransfer.getData("text/plain"); // Retrieve the dragged item's ID
+  const draggable = document.getElementById(id);
 
-  // Remove from DOM
-  if (draggable) {
-    draggable.remove();
-  }
-
-  // Remove from IndexedDB
   try {
-    await db.deleteApp(parseInt(appID, 10));
-    alert("Application deleted successfully!");
+    // Perform a PUT request to soft-delete the application by setting isDeleted to true
+    const response = await fetch(`http://localhost:3021/applications/soft-delete/${id}`, {
+      method: "PUT", // Change method to PUT for soft delete
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ isDeleted: true, dateDeleted: new Date()}), // Update only the status field
+    });
+
+    if (response.ok) {
+      // If the request was successful, remove the element from the DOM
+      if (draggable) {
+        draggable.remove();
+      }
+      alert("Application soft-deleted successfully!");
+    } else {
+      const result = await response.json();
+      alert(result.message || "Error soft-deleting application.");
+    }
   } catch (error) {
-    console.error("Error deleting application:", error);
+    console.error("Error soft-deleting application:", error);
   }
 }
+
 
 // Add Job Functionality
 const modal = document.getElementById("add-popup");
@@ -146,7 +154,6 @@ window.onclick = function (event) {
 // let appQuery;
 
 submitBtn.addEventListener("click", async () => {
-
   const companyName = document.getElementById("companyName").value;
   const position = document.getElementById("position").value;
   const location = document.getElementById("jobLocation").value;
@@ -158,7 +165,6 @@ submitBtn.addEventListener("click", async () => {
   const hasStar = null;
 
   const applicationData = {
-    // id: new Date().getTime(),
     companyName: companyName,
     position: position,
     location: location,
@@ -168,22 +174,20 @@ submitBtn.addEventListener("click", async () => {
     deadline: document.getElementById("deadline").value,
     previousStatus: null,
     dateDeleted: null,
-    hasStar: null
+    hasStar: null,
   };
-
 
   try {
     console.log("data to backend ", JSON.stringify(applicationData));
 
     // Save the application to database
-    const response = await fetch('http://localhost:3021/application', {
-      method: 'POST',
-      headers:{
-        'Content-Type': 'application/json'
+    const response = await fetch("http://localhost:3021/application", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(applicationData)
+      body: JSON.stringify(applicationData),
     });
-
 
     if (!response.ok) {
       throw new Error("Failed to create application");
@@ -202,7 +206,6 @@ submitBtn.addEventListener("click", async () => {
     document.getElementById("deadline").value = "";
     document.getElementById("status").value = "interested";
     modal.style.display = "none";
-
   } catch (error) {
     console.log("Error adding new application!", error);
   }
@@ -213,12 +216,13 @@ function renderApplication(application) {
   // Create a new application box
   const applicationBox = document.createElement("div");
   applicationBox.className = "application-box";
-  applicationBox.id = application.id; // Use application.id from the parameter
+  applicationBox.id = application.id; 
   applicationBox.draggable = true;
 
   // Add data-* attributes for sorting
-  applicationBox.dataset.dateApplied = application.dateApplied || '';
-  applicationBox.dataset.companyName = application.companyName.toLowerCase() || '';
+  applicationBox.dataset.dateApplied = application.dateApplied || "";
+  applicationBox.dataset.companyName =
+    application.companyName.toLowerCase() || "";
 
   // Set inner HTML using application data
   applicationBox.innerHTML = `
@@ -236,14 +240,16 @@ function renderApplication(application) {
       applicationBox.classList.toggle("priority", !isStarred); // Add or remove the priority class
 
       // Reorder applications based on priority
-      const boxes = Array.from(statusColumn.querySelectorAll(".application-box"));
+      const boxes = Array.from(
+        statusColumn.querySelectorAll(".application-box")
+      );
 
       // Separate priority and non-priority boxes
-      const priorityBoxes = boxes.filter((box) =>
-        box.querySelector(".star-icon").textContent === "★"
+      const priorityBoxes = boxes.filter(
+        (box) => box.querySelector(".star-icon").textContent === "★"
       );
-      const nonPriorityBoxes = boxes.filter((box) =>
-        box.querySelector(".star-icon").textContent === "☆"
+      const nonPriorityBoxes = boxes.filter(
+        (box) => box.querySelector(".star-icon").textContent === "☆"
       );
 
       // Remove all boxes temporarily
@@ -258,24 +264,22 @@ function renderApplication(application) {
   applicationBox.addEventListener("dragstart", dragStart);
   applicationBox.addEventListener("dragend", dragEnd);
 
-  const statusColumn = document.getElementById(application.status); // Use application.status
-  if (statusColumn) {
+  const statusColumn = document.getElementById(application.status); 
+  const deleteStatus = application.isDeleted;
+  if (statusColumn && (deleteStatus !== true)) {
     statusColumn.appendChild(applicationBox);
   }
 
   applicationBox.addEventListener("dblclick", () => {
-    window.location.href = `applicationInfo.html?id=${application.id}`; // Use application.id
+    window.location.href = `applicationInfo.html?id=${application.id}`;
   });
 }
-
-
 
 // Reminder Modal
 const reminder = document.getElementById("reminder-popup");
 const remindButton = document.getElementById("new-reminder-button");
 const remindSpan = document.getElementsByClassName("close-reminder")[0];
 const remindSubmit = document.getElementById("reminder-submit");
-
 
 remindButton.addEventListener("click", () => {
   reminder.style.display = "flex";
@@ -294,28 +298,27 @@ window.addEventListener("click", function (event) {
 // add reminder delete button functionality
 
 function reminderDeleteListeners() {
+  const deleteButtons = document.querySelectorAll(".delete-reminder");
 
-  const deleteButtons = document.querySelectorAll('.delete-reminder');
-  
-  deleteButtons.forEach(button => {
-    button.addEventListener('click', async (e) => {
-
-      const reminderToDelete = e.target.closest('.reminder-container');
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", async (e) => {
+      const reminderToDelete = e.target.closest(".reminder-container");
       const reminderId = reminderToDelete.dataset.id;
 
       if (reminderToDelete) {
         try {
-
-          const response = await fetch(`http://localhost:3021/reminder/${reminderId}`, {
-            method: 'DELETE'
-          });
+          const response = await fetch(
+            `http://localhost:3021/reminder/${reminderId}`,
+            {
+              method: "DELETE",
+            }
+          );
 
           if (!response.ok) {
             throw new Error("Failed to delete reminder");
           }
 
           reminderToDelete.remove();
-
         } catch (error) {
           console.log("Error deleting reminder!", error);
         }
@@ -324,33 +327,31 @@ function reminderDeleteListeners() {
   });
 }
 
-reminderDeleteListeners(); 
+reminderDeleteListeners();
 
-// create and render new reminder 
+// create and render new reminder
 const reminderSort = [];
 
 remindSubmit.addEventListener("click", async () => {
-  
   const reminderText = document.getElementById("reminder-des").value;
   const reminderDate = document.getElementById("remind-date").value;
 
   // get data
   const reminderData = {
     description: reminderText,
-    date: reminderDate
-  }
+    date: reminderDate,
+  };
 
   // save data
   try {
-    
     console.log("data to backend ", JSON.stringify(reminderData));
 
-    const response = await fetch('http://localhost:3021/reminder', {
-      method: 'POST',
-      headers:{
-        'Content-Type': 'application/json'
+    const response = await fetch("http://localhost:3021/reminder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(reminderData)
+      body: JSON.stringify(reminderData),
     });
 
     if (!response.ok) {
@@ -362,9 +363,8 @@ remindSubmit.addEventListener("click", async () => {
 
     document.getElementById("reminder-des").value = "";
     document.getElementById("remind-date").value = "";
-    
-    reminder.style.display = "none";
 
+    reminder.style.display = "none";
   } catch (error) {
     console.log("Error adding new reminder!", error);
   }
@@ -373,9 +373,10 @@ remindSubmit.addEventListener("click", async () => {
 // render reminders after reload
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    
-    const reminderResponse = await fetch('http://localhost:3021/reminder');
-    const applicationResponse = await fetch('http://localhost:3021/application');
+    const reminderResponse = await fetch("http://localhost:3021/reminder");
+    const applicationResponse = await fetch(
+      "http://localhost:3021/application"
+    );
     if (!reminderResponse.ok) {
       throw new Error("Failed to load reminders");
     }
@@ -388,11 +389,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const applications = await applicationResponse.json();
     applications.forEach(renderApplication);
-
   } catch (error) {
     console.log("Error fetching reminders!", error);
   }
-
 });
 
 // sort and render the reminders
@@ -418,7 +417,6 @@ function sortAndRender(reminder) {
 
 // add reminders to UI
 function renderReminder(reminder) {
-
   const reminderContainer = document.createElement("div");
   reminderContainer.className = "reminder-container";
   reminderContainer.dataset.id = reminder.id;
@@ -436,14 +434,16 @@ function renderReminder(reminder) {
   reminderDateP.className = "reminder-date";
 
   const reminderDate = new Date(reminder.date);
-  const reminderToDate = reminderDate.toLocaleDateString('en-US', { timeZone: 'UTC' });
+  const reminderToDate = reminderDate.toLocaleDateString("en-US", {
+    timeZone: "UTC",
+  });
   reminderDateP.textContent = `Deadline: ${reminderToDate}`;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   if (reminderDate < today) {
-  reminderDateP.style.color = 'red';
+    reminderDateP.style.color = "red";
   }
 
   const deleteButton = document.createElement("button");
@@ -459,7 +459,6 @@ function renderReminder(reminder) {
   reminderContainer.appendChild(reminderRow);
 
   return reminderContainer;
-
 }
 
 // Dropdown event listener for sorting
@@ -473,7 +472,9 @@ sortDropdown.addEventListener("change", () => {
 
   statusColumns.forEach((column) => {
     // Get all application boxes within the column
-    const applications = Array.from(column.querySelectorAll(".application-box"));
+    const applications = Array.from(
+      column.querySelectorAll(".application-box")
+    );
 
     // Sort applications based on the selected option
     applications.sort((a, b) => {
@@ -482,7 +483,9 @@ sortDropdown.addEventListener("change", () => {
         return a.dataset.companyName.localeCompare(b.dataset.companyName);
       } else if (sortOption === "date") {
         // Sort by date applied
-        return new Date(a.dataset.dateApplied) - new Date(b.dataset.dateApplied);
+        return (
+          new Date(a.dataset.dateApplied) - new Date(b.dataset.dateApplied)
+        );
       }
       return 0; // Default order (no change)
     });
@@ -494,3 +497,106 @@ sortDropdown.addEventListener("change", () => {
     applications.forEach((app) => column.appendChild(app));
   });
 });
+
+// Get references to pop-up elements
+const popup = document.getElementById("popup-container");
+const overlay = document.getElementById("popup-overlay");
+const closeBtn = document.getElementById("popup-close");
+const doNotShowCheckbox = document.getElementById("do-not-show");
+const greetingElement = document.getElementById("popup-greeting");
+
+// Show the pop-up
+document.addEventListener("DOMContentLoaded", () => {
+  showPopup();
+});
+
+async function showPopup() {
+  const doNotShowToday = localStorage.getItem("doNotShowToday");
+
+  if (!doNotShowToday || new Date().toDateString() !== doNotShowToday) {
+    try {
+      // Determine the time-based greeting
+      const currentHour = new Date().getHours();
+      let greeting;
+      if (currentHour < 12) {
+        greeting = "Good Morning!";
+      } else if (currentHour < 18) {
+        greeting = "Good Afternoon!";
+      } else {
+        greeting = "Good Evening!";
+      }
+      greetingElement.textContent = greeting;
+
+      // Fetch reminders
+      const response = await fetch("http://localhost:3021/reminder");
+      if (!response.ok) {
+        throw new Error("Failed to fetch reminders.");
+      }
+
+      const reminders = await response.json();
+
+      // Sort reminders by deadline date in ascending order (closest deadlines first)
+      reminders.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Limit to 3 reminders
+
+      const latestReminders = reminders.slice(0, 3);
+
+      // Populate reminders
+      const reminderList = document.getElementById("reminder-list");
+      reminderList.innerHTML = ""; // Clear existing reminders
+      latestReminders.forEach((reminder) => {
+        const listItem = document.createElement("li");
+
+        listItem.innerHTML = `
+                  ${reminder.description} - ${new Date(
+          reminder.date
+        ).toLocaleDateString("en-US", {timeZone: "UTC",})} 
+              `;
+        reminderList.appendChild(listItem);
+      });
+
+      // Display the pop-up
+      const popup = document.getElementById("popup-container");
+      const overlay = document.getElementById("popup-overlay");
+      popup.style.display = "block";
+      overlay.style.display = "block";
+
+      // Event listener for close button
+      document.getElementById("popup-close").addEventListener("click", () => {
+        popup.style.display = "none";
+        overlay.style.display = "none";
+      });
+
+      // Event listener for "Do not show today"
+      document.getElementById("do-not-show").addEventListener("change", (e) => {
+        if (e.target.checked) {
+          localStorage.setItem("doNotShowToday", new Date().toDateString());
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching reminders:", error);
+    }
+  }
+}
+
+// Close the pop-up
+function closePopup() {
+  popup.style.display = "none";
+  overlay.style.display = "none";
+
+  // If the checkbox is checked, set a flag in local storage
+  if (doNotShowCheckbox.checked) {
+    localStorage.setItem("doNotShowToday", new Date().toDateString());
+  }
+}
+
+// Event listener for close button
+closeBtn.addEventListener("click", closePopup);
+
+// Event listener for clicking outside the pop-up
+overlay.addEventListener("click", closePopup);
+
+// Show the pop-up when the page loads
+document.addEventListener("DOMContentLoaded", showPopup);
+

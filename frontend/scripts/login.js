@@ -87,6 +87,7 @@ signinForm.addEventListener("submit", async (e) => {
 
     if (user.password === hashedPassword) {
       alert("Login successful!");
+      sessionStorage.setItem("userEmail", email); // Store user's email in sessionStorage
       window.location.href = "./homepage.html"; // Redirect to homepage
     } else {
       alert("Invalid email or password.");

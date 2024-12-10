@@ -216,3 +216,88 @@ h1#displayName {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
 }
+
+/* General Application Box Styling */
+.application-box {
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  font-size: 13px;
+  text-align: left;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.application-box:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for Deleted Applications */
+#deleted-column .application-box {
+  background-color: #e0e0e0;  /* Light gray for deleted applications */
+  opacity: 0.7;
+}
+
+/* Layout for application content */
+.application-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Restore and Delete Buttons */
+button {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Restore Button Styling */
+.restore-btn {
+  background-color: #a9afba;
+  color: white;
+  border: none;
+}
+
+.restore-btn:hover {
+  background-color: #a9afba;
+}
+
+/* Permanently Delete Button Styling */
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.delete-btn:hover {
+  background-color: #e53935;
+}
+
+/* Status Columns Styling */
+.status-columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-column {
+  flex: 1;
+  margin: 10px;
+}
+
+/* Remove drag cursor when dealing with deleted applications */
+#deleted-applications .application-box {
+  cursor: default; /* Disable dragging */
+}
+
+/* For deleted application status indicator */
+#deleted-applications .application-box p {
+  color: #000000;
+  font-weight: bold;
+}

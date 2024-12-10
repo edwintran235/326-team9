@@ -1,5 +1,15 @@
 ## Contribution Log for Sofia Simonoff
 
+### December 9, 2024
+- **Task 1**: Trash and Restore functionality.
+- **Details**: Worked on trash and restore functionality. Added routes for each.
+
+### December 4, 2024
+- **Task 1**: Improved homepage, profile page, and tips page UI.
+- **Details**: Improved visual design and made other styling edits.
+- **Task 1**: Created consistent routing.
+- **Details**: At the top of each page I made consistent routing between the pages.
+
 ### December 3, 2024
 - **Task 1**: Set up the team’s Trello board.
 - **Details**: Added tasks in the team's Trello for Milestone #4, including task descriptions and deadlines.

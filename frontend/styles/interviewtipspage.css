@@ -1,13 +1,11 @@
-/* Reset some basic styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-/*--------------------------------------------------------------------------------*/
-
-/* Header Styles */
+/* Header styles */
 header {
     display: flex;
     align-items: center;
@@ -19,59 +17,14 @@ header {
     top: 0;
     left: 0;
     z-index: 1000;
+    margin-bottom: 60px;
 }
 
 header .logo {
     font-size: 24px;
     font-weight: bold;
-    color: white;
+    color: white; 
 }
-
-.title {
-    color: rgb(100, 150, 255);
-    text-align: center;
-    padding: 10px;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px;
-    margin-top: 50px;
-    color: #333;
-}
-
-/* Tips Styles */
-.tips-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Creates 4 columns of equal width */
-    gap: 15px;
-}
-
-.tip-box {
-    background-color: white;
-    border-radius: 10px;
-    padding: 10px; /* Space inside the box */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.tip-box-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Nav Bar Styles */
-.nav-bar {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    padding: 10px 20px; 
-    border-bottom: 1px solid #ccc; 
-  }
 
 .nav-buttons button {
     background-color: #c3d3f1a9;
@@ -86,14 +39,123 @@ body {
     transition: background-color 0.3s ease; 
 }
 
+.nav-buttons {
+    padding-right: 40px;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 10px 20px; 
+    border-bottom: 1px solid #ccc; 
+}
+  
+
 .nav-buttons button:hover {
     background-color: #bcd5fffc;
 }
 
-.hiring-managers-tips-container h2,
-.alumni-tips-container h2 {
-    margin-top: 30px;
-    margin-bottom: 20px; 
-    text-decoration: underline;
-    font-size: 20px;
+/* Add Tip Button */
+.add-tip-button-container {
+    text-align: center;
+    margin: 120px 0 20px; /* Adjusted top margin */
+    z-index: 100; 
+}
+
+.add-tip-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Tips Container */
+.interview-tips-container {
+    margin-top: 100; /* Ensure it's fully below the header */
+    margin-left: 20px;
+}
+
+.tips-category-container {
+    margin: 20px 0;
+}
+
+.tips-category-container h2 {
+    text-align: left;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.tips-row {
+    display: flex;
+    flex-wrap: wrap; /* Allow tips to wrap to the next line */
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tip {
+    flex: 1 1 calc(33.33% - 10px); /* 3 tips per row */
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content label {
+    display: block;
+    margin-top: 10px;
+}
+
+.modal-content input, 
+.modal-content textarea, 
+.modal-content select {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal-content button {
+    margin-top: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.cancel-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
 }

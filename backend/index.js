@@ -1,93 +1,89 @@
 const express = require('express');
+const cors = require('cors'); // Import the cors middleware
+const cron = require('node-cron');
+
 const sequelize = require('./config/database');
-const { User } = require('./models/user');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+sequelize.sync({alter:true})
+    .then(() => console.log("Database is open."))
+    .catch((err) => console.log("Could not open database: " + `${err.message}`));
 
 const app = express();
-const SECRET_KEY = 'your_secret_key'; // Use a secure secret key
 
-// Sync the database
-sequelize.sync({alter: true})
-    .then(() => console.log('Database is open.'))
-    .catch((err) => console.log('Could not open database: ' + `${err.message}`));
+// Allow requests from http://127.0.0.1:5500
+app.use(cors({
+    origin: 'http://127.0.0.1:5500'
+}));
 
-// Middleware for handling JSON requests
+// Middleware for database comms in format of json objects
 app.use(express.json());
 
-// Middleware to validate JWT
-function authenticateToken(req, res, next) {
-    const token = req.headers['authorization'];
-    if (!token) return res.status(401).send('Access Denied');
 
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-        if (err) return res.status(403).send('Invalid Token');
-        req.user = user;
-        next();
-    });
-}
+// Import and use routes
+const userRoutes = require('./routes/user');
+app.use('/', userRoutes);
 
-// Route: User Registration
-app.post('/auth/register', async (req, res) => {
+// Import Schemas
+const { User, Application, Tip, Interview, Reminder } = require('./models/user');
+
+// Cron job to delete applications older than 30 days
+cron.schedule('0 0 * * *', async () => {  
     try {
-        const { email, password, firstName, lastName } = req.body;
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-        // Check if the user already exists
-        const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) return res.status(400).send('User already exists');
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create the user
-        const newUser = await User.create({
-            email,
-            password: hashedPassword,
-            firstName,
-            lastName,
+        // Find applications flagged as deleted and older than 30 days
+        await Application.destroy({
+            where: {
+                is_deleted: true,
+                date_deleted: {
+                    [sequelize.Op.lt]: thirtyDaysAgo
+                }
+            }
         });
 
-        res.status(201).send('User registered successfully');
+        console.log('Old deleted applications permanently removed from the database.');
     } catch (err) {
-        res.status(500).send(`Error: ${err.message}`);
+        console.error('Error deleting old applications:', err.message);
     }
 });
 
-// Route: User Login
-app.post('/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // Check if the user exists
-        const user = await User.findOne({ where: { email } });
-        if (!user) return res.status(404).send('User not found');
-
-        // Compare the password
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return res.status(400).send('Invalid credentials');
-
-        // Generate JWT token
-        const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
-            expiresIn: '1h',
-        });
-
-        res.json({ token });
-    } catch (err) {
-        res.status(500).send(`Error: ${err.message}`);
-    }
+// Post to the users table
+app.post("/users", (req, res) => {
+    User.create(req.body)
+        .then(() => res.send("User entry added"))
+        .catch(err => res.status(400).json({ error: err.message }));
 });
 
-// Route: Logout (Client-side can delete the token)
-app.post('/auth/logout', (req, res) => {
-    res.status(200).send('User logged out');
+
+// Post to the applications table
+app.post("/application", (req, res) => {
+    Application.create(req.body)
+    .then(() => res.send("application entry added"))
+    .catch(err => res.status(400).json({ error: err.message }));
 });
 
-// Protected Route Example
-app.get('/protected', authenticateToken, (req, res) => {
-    res.send(`Welcome, ${req.user.email}!`);
+// Post to the tips table
+app.post("/tips", (req, res) => {
+    Tip.create(req.body)
+    .then(() => res.send("tip entry added"))
+    .catch(err => res.status(400).json({ error: err.message }));
 });
 
-// Start the server
+// Post to the reminders table
+app.post("/reminders", (req, res) => {
+    Reminder.create(req.body)
+    .then(() => res.send("reminder entry added"))
+    .catch(err => res.status(400).json({ error: err.message }));
+});
+
+// Post to the interviews table
+app.post("/interviews", (req, res) => {
+    Interview.create(req.body)
+    .then(() => res.send("interview entry added"))
+    .catch(err => res.status(400).json({ error: err.message }));
+});
+
+// Run the app on port 3021
 app.listen(3021, () => {
-    console.log('The server has started!');
+    console.log("The server has started!");
 });

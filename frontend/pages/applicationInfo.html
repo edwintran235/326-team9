@@ -7,9 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Information</title>
     <link href="../styles/main.css" rel="stylesheet" />
-    <script src="../components/script.js" src="../components/indexedDB.js"></script>
 </head>
-<script type="module" src="../scripts/applications.js"></script>
+
 
 <!-- Header -->
 <header>
@@ -28,75 +27,49 @@
     <div class="main-content">
         <div class="application-info-column">
             <!-- TODO: Make this the company name of the application clicked on -->
-            <h1 id="company-name">Amazon</h1><br><br>
+            <h1 id="company-name"></h1><br><br>
         </div>
-        <!-- Turn into readonly inputs with labels -->
+        
         <label id="pos">Position: </label>
-        <input type='text' id="pos" value="Software Engineer" readonly/><br><br>
-        <label id="loc" >Location: </label>
-        <input type='text' id="loc" value="Boston, MA" readonly /><br><br>
-        <label id="contacts" >Contacts: </label>
-        <input type='text' id="contacts" value="amazon@applications.gmail.com" readonly /><br><br>
-        <label id="description" >Description: </label>
-        <input type='text' id="description" value="Work remotely as a software engineer. Starting salary $75,000." readonly /><br><br>
+        <input type='text' id="jobPos" value="" readonly /><br><br>
+        
+        <label id="loc">Location: </label>
+        <input type='text' id="jobLoc" value="" readonly/><br><br>
+        
+        <label id="contacts">Contacts: </label>
+        <input type='text' id="jobCon" value="" readonly /><br><br>
+        
+        <label id="description">Description: </label>
+        <input type='text' id="jobDesc" value="" readonly /><br><br>
+        
         <h2>Status</h2>
-        <input type="text" id="curStatus" value="Interested"/><br><br>
-        <label id="date-applied" >Date Applied: </label>
-        <input type='datetime-local' id="date-applied" readonly /><br><br>
-        <!-- Resume and cover letter drop boxes and display -->
-        <label key="resume" >Resume: </label>
-        <input type='file' key="resume" readonly /><br><br>
+        <input type="text" id="curStatus" value="" readonly/><br><br>
+        
+        <label id="date-applied">Date Applied: </label>
+        <input type='date' id="applied" readonly /><br><br>
+        
+        <!-- Resume and cover letter drop boxes -->
+        <label key="resume">Resume: </label>
+        <input type='file' key="resume"/><br><br>
+        
         <label key="coverLetter">Cover Letter:</label>
-        <input type='file' key="coverLetter" readonly /><br><br>
-
+        <input type='file' key="coverLetter"/><br><br>
 </div>
 
 <!-- Sidebar for Upcoming Dates -->
-<div class="sidebar">
-    <div class="upcoming-dates">
-        <h3>Reminders and Deadlines</h3>
-    
-      <!-- checklist for reminders -->
-        <div class="reminder-container">
-          <div class="reminder-row">
-            <!-- Reminder Name and Date -->
-            <div class="reminder-text">
-              <p class="reminder-name">Amazon Interview</p>
-              <p class="reminder-date">Deadline: 2024-12-04</p>
-            </div>
-
-            <!-- Checkbox -->
-            <label>
-              <input type="checkbox">
-            </label>
-
-          </div>
-        </div>
-    </div>
+    <!-- Sidebar for Upcoming Dates -->
+    <div class="sidebar">
+      <div class="upcoming-dates">
+          <h3>Reminders and Deadlines</h3>
+          
+          <!-- This is where the reminders will be dynamically rendered -->
+          <div id="add-reminder"></div>
+      </div>
+  </div>
 </div>
 </div>
-
-
-<footer>
-<div class="interview-notes-section">
-    <h2>Interview Notes</h2>
-
-    <!-- Interview Date -->
-    <div class="interview-note">
-        <h3>Interview Date: <input type="date" id="interview-date" /></h3>
-        <label for="interview-format-1">Interview Format:</label>
-        <select id="interview-format-1">
-            <option value="select">select value</option>
-            <option value="phone">Phone</option>
-            <option value="technical">Technical Exam</option>
-            <option value="onsite">On-Site</option>
-        </select><br><br>
-
-        <label for="interview-questions-1">Questions Asked:</label><br>
-        <textarea id="interview-questions-1" rows="4" placeholder="Notes..."></textarea><br><br>
-    </div>
-</div>
-  </footer>  
+  
+  <script type="module" src="../scripts/applications.js"></script>
 
 </body>   
 </html>

@@ -10,6 +10,15 @@ const sequelize = require('../config/database');
 // const tableName6 = 'interviews';
 // TODO: create the rest of the tables
 
+// Tables to create
+// const tableName1 = 'users';
+// const tableName2 = 'applications';
+// const tableName3 = 'application information';
+// const tableName4 = 'tips';
+// const tableName5 = 'reminders';
+// const tableName6 = 'interviews';
+// TODO: create the rest of the tables
+
 // User Schema
 class User extends Model {}
 User.init({
@@ -29,12 +38,6 @@ User.init({
     bio: {
         type: DataTypes.STRING
     },
-    resumePath: {
-        type: DataTypes.STRING,
-    },
-    coverLetterPath: {
-        type: DataTypes.STRING,
-    },
     // TODO: add resume, cover letter, and photo
 }, {
     sequelize,
@@ -52,10 +55,6 @@ Application.init({
         autoIncrement: true,
         allowNull: true
     },
-    // userId: {
-    //     type: DataTypes.INTEGER, // Foreign key for the User
-    //     allowNull: true
-    // },
     companyName: {
         type: DataTypes.STRING,
     },
@@ -75,17 +74,30 @@ Application.init({
         type: DataTypes.ENUM,
         values: ['interested', 'applied', 'interviewing', 'offer'],
     },
+    previousStatus: {
+        type: DataTypes.ENUM,
+        values: ['interested', 'applied', 'interviewing', 'offer'],
+        allowNull: true
+    },
+    dateApplied: {
+        type: DataTypes.DATE
+    },
+    dateDeleted: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
     isDeleted: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
     },
     // previousStatus: {
     //     type: DataTypes.ENUM,
-    //     values: ['interested', 'applied', 'interviewing', 'offer'],
+    //     values: ['interested', 'applied', 'interviewing'],
     //     allowNull: true
     // },
-    // dateApplied: {
-    //     type: DataTypes.DATE
-    // },
+    dateApplied: {
+        type: DataTypes.DATE
+    },
     // dateDeleted: {
     //     type: DataTypes.DATE,
     //     allowNull: true
@@ -120,7 +132,7 @@ Tip.init({
     },
     interviewStage: {
         type: DataTypes.ENUM,
-        values: ['interested', 'applied', 'interviewing', 'offer'],
+        values: ['interested', 'applied', 'interviewing'],
     },
 }, {
     sequelize,

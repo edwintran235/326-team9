@@ -39,3 +39,19 @@
 - **Link to Commit**: https://github.com/edwintran235/326-team9/commit/c80ac95f24417500d1b1828758e102c41298a7e4
 - **Task 3**: added a 'new reminder' button that brings up a window for users to enter information to be reminded about.
 - **Link to Commit**: https://github.com/edwintran235/326-team9/commit/fb07bded8c8c3a7f0eceac725f2aa118edd5c68c#diff-289e1890e590076490274afe863b8852df6b7ef8d0c909c790e2ca4d131a909d
+
+### December 8, 2024
+- **Task 1**: added code for backend storage, deletion, and retrieval for reminders
+- **Details**: added put, delete, and get routes for the reminders and added code in script.js to store reminders, delete reminders, and fetch reminders on the page reload.
+- **Link to Commit**: https://github.com/edwintran235/326-team9/commit/6be07e1528b995625eb9ec91a273a9949eabd125
+- **Task 2**: added sorting functionality to reminders
+- **Details**: reminders are sorted so the soonest deadlines are at the top of the list and deadlines that are past due are shown in red.
+- **Link to Commit**: https://github.com/edwintran235/326-team9/commit/da033e9c08917d2c11a7a6e0d3db137ed63cda8f
+- **Task 3**: added code for application storage and retrieval 
+- **Details**: added code for the frontend to store and get applications when added and render them on the screen after reload
+- **Link to Commit**: https://github.com/edwintran235/326-team9/commit/92a884bfeac28d26407395508a5e454661126ab9
+
+### December 9, 2024
+- **Task 1**: integrated applications with specific application pages
+- **Details**: when a user double clicks on an application box, it will direct to a page specific to that application that contains the info the user inputted when adding the application.
+- **Link to Commit**: https://github.com/edwintran235/326-team9/commit/9027692974cfa852cbcc0cc0d62c7d1c5a22ba6a
