@@ -227,4 +227,55 @@ router.delete('/applications/:id', async (req, res) => {
     }
 });
 
+// Fetch interview notes for a specific user's application
+router.get('/user/:userId/applications/:applicationId/notes', async (req, res) => {
+    try {
+        const { userId, applicationId } = req.params;
+
+        // Ensure Application model is imported correctly
+        const application = await Application.findOne({ where: { id: applicationId, userId: userId } });
+
+        if (!application) {
+            return res.status(404).json({ error: 'Application not found for this user' });
+        }
+
+        const interviewNotes = await InterviewNotes.findOne({
+            where: { application_id: application.id }
+        });
+
+        res.json({ notes: interviewNotes ? interviewNotes.notes : '' });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+// Update interview notes for a specific user's application
+router.put('/user/:userId/applications/:applicationId/notes', async (req, res) => {
+    try {
+        const { userId, applicationId } = req.params;
+        const { notes } = req.body;
+
+        // Ensure Application model is imported correctly
+        const application = await Application.findOne({ where: { id: applicationId, userId: userId } });
+
+        if (!application) {
+            return res.status(404).json({ error: 'Application not found for this user' });
+        }
+
+        const interviewNotes = await InterviewNotes.findOrCreate({
+            where: { application_id: application.id },
+            defaults: { application_id: application.id, notes: '' },
+        });
+
+        interviewNotes[0].notes = notes;
+        await interviewNotes[0].save();
+
+        res.status(200).json({ message: 'Interview notes updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 module.exports = router;
