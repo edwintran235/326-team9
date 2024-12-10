@@ -73,9 +73,9 @@ Application.init({
     //     values: ['interested', 'applied', 'interviewing'],
     //     allowNull: true
     // },
-    // dateApplied: {
-    //     type: DataTypes.DATE
-    // },
+    dateApplied: {
+        type: DataTypes.DATE
+    },
     // dateDeleted: {
     //     type: DataTypes.DATE,
     //     allowNull: true
