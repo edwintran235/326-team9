@@ -10,6 +10,7 @@ async function fetchAppData(applicationId) {
     const applicationData = await response.json();
     console.log("fetched data: ", applicationData);
 
+
     appDetails(applicationData);
 
     // Fetch reminders
@@ -41,6 +42,48 @@ function appDetails(data) {
   document.getElementById("jobCon").value = data.contacts;
   document.getElementById("jobDesc").value = data.description;
   document.getElementById("applied").value = data.dateApplied;
+}
+
+
+async function fetchNoteData(applicationId) {
+
+  try {
+
+    const response = await fetch(`http://localhost:3021/interview/${applicationId}`)
+    if (!response.ok) {
+      throw new Error(`Failed to fetch note details. Status: ${response.status}`);
+    }
+
+    console.log("fetched note data: ", noteData);
+    noteDetails(noteData)
+
+    appDetails(noteData);
+
+    // Fetch reminders
+    const reminderResponse = await fetch('http://localhost:3021/interview/questions');
+    if (!reminderResponse.ok) {
+      throw new Error("Failed to fetch notes");
+    }
+    const reminders = await reminderResponse.json();
+    console.log("Fetched notes: ", questions);
+
+    interviewNotes.forEach(note => {
+      const noteDiv = document.createElement("div");
+      noteDiv.className = "note-item";
+      noteDiv.innerHTML = `<strong>Question:</strong> ${note.questions}`;
+      container.appendChild(noteDiv);
+  });
+
+  } catch (error) {
+    console.error("Error fetching notes:", error);
+  }
+
+}
+
+
+function noteDetails(data) {
+  console.log(data);
+  document.getElementById("interview-questions").textContent = data.questions;
 }
 
 function getApplicationIdFromURL() {
@@ -100,3 +143,32 @@ function renderReminderWithoutDelete(reminder) {
   currReminders.appendChild(reminderContainer);
 
 }
+
+// async function fetchInterviewNotes(applicationId) {
+//   try {
+//     // Fetch interview notes for the application
+//     const response = await fetch(`http://localhost:3021/interview/${applicationId}`);
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch interview notes. Status: ${response.status}`);
+//     }
+//     const interviewNotes = await response.json();
+//     console.log("Fetched interview notes: ", interviewNotes);
+
+//     // Render interview notes
+//     renderInterviewNotes(interviewNotes);
+//   } catch (error) {
+//     console.error("Error fetching interview notes:", error);
+//   }
+// }
+
+// function renderInterviewNotes(interviewNotes) {
+//   const container = document.getElementById("interview-questions");
+//   container.innerHTML = ""; // Clear existing notes
+
+//   interviewNotes.forEach(note => {
+//       const noteDiv = document.createElement("div");
+//       noteDiv.className = "note-item";
+//       noteDiv.innerHTML = `<strong>Question:</strong> ${note.questions}`;
+//       container.appendChild(noteDiv);
+//   });
+// }
