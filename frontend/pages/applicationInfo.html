@@ -28,26 +28,34 @@
     <div class="main-content">
         <div class="application-info-column">
             <!-- TODO: Make this the company name of the application clicked on -->
-            <h1 id="company-name">Amazon</h1><br><br>
+            <h1 id="company-name"></h1><br><br>
         </div>
-        <!-- Turn into readonly inputs with labels -->
+        
         <label id="pos">Position: </label>
-        <input type='text' id="jobPos" value="Software Engineer"/><br><br>
-        <label id="loc" >Location: </label>
-        <input type='text' id="jobLoc" value="Boston, MA" /><br><br>
-        <label id="contacts" >Contacts: </label>
-        <input type='text' id="jobCon" value="amazon@applications.gmail.com" readonly /><br><br>
-        <label id="description" >Description: </label>
-        <input type='text' id="jobDesc" value="Work remotely as a software engineer. Starting salary $75,000." readonly /><br><br>
+        <input type='text' id="jobPos" value=""/><br><br>
+        
+        <label id="loc">Location: </label>
+        <input type='text' id="jobLoc" value=""/><br><br>
+        
+        <label id="contacts">Contacts: </label>
+        <input type='text' id="jobCon" value=""/><br><br>
+        
+        <label id="description">Description: </label>
+        <input type='text' id="jobDesc" value=""/><br><br>
+        
         <h2>Status</h2>
-        <input type="text" id="curStatus" value="Interested"/><br><br>
-        <label id="date-applied" >Date Applied: </label>
-        <input type='datetime-local' id="applied" readonly /><br><br>
-        <!-- Resume and cover letter drop boxes and display -->
-        <label key="resume" >Resume: </label>
-        <input type='file' key="resume" readonly /><br><br>
+        <input type="text" id="curStatus" value=""/><br><br>
+        
+        <label id="date-applied">Date Applied: </label>
+        <input type='datetime-local' id="applied" /><br><br>
+        
+        <!-- Resume and cover letter drop boxes -->
+        <label key="resume">Resume: </label>
+        <input type='file' key="resume"/><br><br>
+        
         <label key="coverLetter">Cover Letter:</label>
-        <input type='file' key="coverLetter" readonly /><br><br>
+        <input type='file' key="coverLetter"/><br><br>
+        
 
 </div>
 
@@ -65,27 +73,15 @@
 </div>
 
 <footer>
-<div class="interview-notes-section">
-    <h2>Interview Notes</h2>
-
-    <!-- Interview Date -->
-    <div class="interview-note">
-        <h3>Interview Date: <input type="date" id="interview-date" /></h3>
-        <label for="interview-format-1">Interview Format:</label>
-        <select id="interview-format-1">
-            <option value="select">select value</option>
-            <option value="phone">Phone</option>
-            <option value="technical">Technical Exam</option>
-            <option value="onsite">On-Site</option>
-        </select><br><br>
-
-        <label for="interview-questions-1">Questions Asked:</label><br>
-        <textarea id="interview-questions-1" rows="4" placeholder="Notes..."></textarea><br><br>
+    <div class="interview-notes-section">
+        <h2>Interview Notes</h2>
+            <textarea id="interview-questions" rows="4" placeholder="Notes..."></textarea><br><br>
+            <button id="saveNotesButton">Save Notes</button>
+        </div>
     </div>
-</div>
-  </footer>  
-
-  <script type="module" src="../scripts/applications.js"></script>
-
-</body>   
-</html>
+    </footer>  
+    
+      <script type="module" src="../scripts/applications.js"></script>
+    
+    </body>   
+    </html>    
